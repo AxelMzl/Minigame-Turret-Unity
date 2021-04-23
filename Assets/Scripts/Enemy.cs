@@ -22,7 +22,6 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("ded");
         GameManager.score += ennemyValue;
         Destroy(gameObject);
     }
@@ -44,8 +43,6 @@ public class Enemy : MonoBehaviour
         int ennemyType = Random.Range(1, 4);
         if (ennemyType == 1)
         {
-            Debug.Log("Ennemy 1");
-
             health = 100;
             speed = 4;
             ennemyValue = 10;
@@ -55,19 +52,15 @@ public class Enemy : MonoBehaviour
 
         if (ennemyType == 2)
         {
-            Debug.Log("Ennemy 2");
-
             health = 200;
             speed = 3;
             ennemyValue = 30;
 
-            this.GetComponent<Renderer>().material.color = new Color(255, 165, 0, 1);
+            this.GetComponent<Renderer>().material.color = new Color(1.0f, 0.64f, 0.0f);
         }
 
         if (ennemyType == 3)
         {
-            Debug.Log("Ennemy 3");
-
             health = 400;
             speed = 1;
             ennemyValue = 50;

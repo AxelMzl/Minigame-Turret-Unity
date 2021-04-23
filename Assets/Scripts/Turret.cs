@@ -14,8 +14,8 @@ public class Turret : MonoBehaviour
 
     public void looseHealth()
     {
-        GameManager.life -= 1;
-        if (GameManager.life <= 0)
+        GameManager.turretLife -= 1;
+        if (GameManager.turretLife <= 0)
         {
             GM.GetComponent<GameManager>().gameOver();
         }

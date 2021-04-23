@@ -5,14 +5,16 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static int score;
-    public static int life = 5;
+    public static int score = 0;
+    public static int turretLife = 5;
 
     public static bool gamePauseStatus = false;
     public static bool gameEnd = false;
 
     public float timeRemaining = 10;
     public string timeFormat;
+    public int maxLife;
+
 
     public GameObject ScoreText;
     public GameObject LifeText;
@@ -31,28 +33,23 @@ public class GameManager : MonoBehaviour
     {
         // TODO
 
-        // Menu du jeu qui permet de jouer et quitter
-        // Menu pause qui permet de quitter le jeu, retourenr et menu et reprendre la partie
-        // Menu 
-        //
+        // Canon laser et bombe
+        gameReset();
+        Debug.Log(turretLife);
 
-        Time.timeScale = 1;
+        // Save Life at first load
+        maxLife = turretLife;
+        Debug.Log(maxLife);
 
-        // Display UI
-        PlayingUI.gameObject.SetActive(true);
-        PauseUI.gameObject.SetActive(false);
-        WinningUI.gameObject.SetActive(false);
-        EndingUI.gameObject.SetActive(false);
-
-        score = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         ScoreText.GetComponent<Text>().text = "Score : " + score;
-        LifeText.GetComponent<Text>().text = "Vie : " + life;
+        LifeText.GetComponent<Text>().text = "Vie : " + turretLife;
         TimerText.GetComponent<Text>().text = "Temps restant : " + DisplayTime(timeRemaining);
+
         // Pause menu
         if (gameEnd == false)
         {
@@ -82,6 +79,21 @@ public class GameManager : MonoBehaviour
 
     }
 
+    void gameReset()
+    {
+        Time.timeScale = 1;
+        gamePauseStatus = false;
+        gameEnd = false;
+        score = 0;
+        turretLife = maxLife;
+
+        // Display UI
+        PlayingUI.gameObject.SetActive(true);
+        PauseUI.gameObject.SetActive(false);
+        WinningUI.gameObject.SetActive(false);
+        EndingUI.gameObject.SetActive(false);
+    }
+
     public void gameOver()
     {
         // Game pause
@@ -93,6 +105,12 @@ public class GameManager : MonoBehaviour
         EndingUI.gameObject.SetActive(true);
         PlayingUI.gameObject.SetActive(false);
 
+        // Update score
+        finalScore();
+    }
+
+    void finalScore()
+    {
         ScoreEndingText.GetComponent<Text>().text = "Score final : " + score;
     }
 
@@ -105,17 +123,19 @@ public class GameManager : MonoBehaviour
 
         // Display UI
         WinningUI.gameObject.SetActive(true);
-        ScoreEndingText.GetComponent<Text>().text = "Score final : " + score;
 
-
+        // Update score
+        finalScore();
     }
 
     void PauseGame()
     {
+        // Game pause
+        Time.timeScale = 0;
+
         // Display UI
         PauseUI.gameObject.SetActive(true);
 
-        Time.timeScale = 0;
         gamePauseStatus = true;
     }
 
@@ -131,7 +151,25 @@ public class GameManager : MonoBehaviour
     public string DisplayTime(float timeToDisplay)
     {
         float minutes = Mathf.FloorToInt(timeToDisplay / 60);
+        if(minutes < 0)
+        {
+            minutes = 0;
+        }
+
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
-        return timeFormat = string.Format("{0:00}:{1:00}", minutes, seconds);
+        if (seconds < 0)
+        {
+            seconds = 0;
+        }
+
+        float milliSeconds = (timeToDisplay % 1) * 100;
+        if (milliSeconds < 0)
+        {
+            milliSeconds = 0;
+        }
+
+        return timeFormat = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliSeconds);
     }
+
+
 }
